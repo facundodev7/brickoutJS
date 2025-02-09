@@ -6,6 +6,7 @@ const unitsize = 10
 let run = false;
 let xVelocity = 0
 let yVelocity = 0
+let bounce = -1
 
 let canLaunch = false
 
@@ -38,9 +39,8 @@ boton3.addEventListener("click", reiniciar)
 window.addEventListener("keydown", mover2)
 
 function test(){
-    slider.xPos = 680;
-    slider.yPos = 700;
-    drawSlider()
+    xVelocity = 0
+    yVelocity = 0
 }
 
 function reiniciar(){
@@ -52,6 +52,8 @@ function start(){
     slider.yPos = 700;
     ball.xPos = 360
     ball.yPos = 660
+    block.xPos = 340;
+    block.yPos = 50;
     canLaunch = true;
     run = true;
     gametick();
@@ -60,17 +62,22 @@ function start(){
 function gametick(){
     setTimeout(()=>{
         clear();
-        drawSlider();
-        drawBall();
+        drawAll();
         checkCollision();
-        console.log("Bola X: ",ball.xPos, "Bola Y: ", ball.yPos)
-        console.log("Slider X: ",slider.xPos, "Slider Y: ", slider.yPos)
         gametick();
+        console.log(block.xPos, block.yPos)
+        console.log(ball.xPos, ball.yPos)
     }, 75)
 }
 
 function clear(){
     ctxTablero.clearRect(0, 0, 800, 800)
+}
+
+function drawAll(){
+    drawSlider();
+    drawBall();
+    drawBlock();
 }
 
 function drawSlider(){
@@ -81,6 +88,9 @@ function drawBall(){
     ctxTablero.drawImage(ball.img, ball.xPos, ball.yPos);
 }
 
+function drawBlock(){
+    ctxTablero.drawImage(block.img, block.xPos, block.yPos)
+}
 
 function ballLaunch(){
     canLaunch = false
@@ -91,8 +101,8 @@ function ballLaunch(){
 
 function ballMove(){
     setTimeout(()=>{
-        ball.yPos -= yVelocity * 2
-        ball.xPos -= xVelocity * 2
+        ball.yPos -= yVelocity 
+        ball.xPos -= xVelocity 
         ballMove();
     }, 75)
 }
@@ -122,75 +132,44 @@ function mover2(event){
         }
     }
 
+function randomDirection(){
+        var random = Math.floor(Math.random() * 2 + 1)
+    }
+
 function checkCollision(){
     //top collision
     if (ball.yPos < (0 + unitsize)){
         yVelocity *= -1
+        ball.yPos += 10
     }
     //left collision
     if (ball.xPos < (0 + unitsize)){
         xVelocity *= -1
+        ball.xPos += 10
     }
     //right collission
     if (ball.xPos > (760 + unitsize)){
         xVelocity *= -1
+        ball.xPos -= 10
     }
     //ball collission
-    //ball.xPos >= slider.xPos - 30 && ball.xPos <= slider.xPos + 70: 
-    // Esto verifica si la posición x de la pelota está dentro del rango del slider 
-    // (desde slider.xPos - 30 hasta slider.xPos + 70).
-    switch(true){
-        case(ball.yPos == (slider.yPos - 30) && ball.xPos == (slider.xPos + 100)):
-        xVelocity *= -1
-        yVelocity *= -1
-        break;
-        case(ball.yPos == (slider.yPos - 30) && ball.xPos == (slider.xPos + 90)):
-        xVelocity *= -1
-        yVelocity *= -1
-        break;
-        case(ball.yPos == (slider.yPos - 30) && ball.xPos == (slider.xPos + 80)):
-        xVelocity *= -1
-        yVelocity *= -1
-        break;
-        case(ball.yPos == (slider.yPos - 30) && ball.xPos == (slider.xPos + 70)):
-        xVelocity *= -1
-        yVelocity *= -1
-        break;
-        case(ball.yPos == (slider.yPos - 30) && ball.xPos == (slider.xPos + 60)):
-        xVelocity *= -1
-        yVelocity *= -1
-        break;
-        case(ball.yPos == (slider.yPos - 30) && ball.xPos == (slider.xPos + 50)):
-        xVelocity *= -1
-        yVelocity *= -1
-        break;
-        case(ball.yPos == (slider.yPos - 30) && ball.xPos == (slider.xPos + 40)):
-        xVelocity *= -1
-        yVelocity *= -1
-        break;
-        case(ball.yPos == (slider.yPos - 30) && ball.xPos == (slider.xPos + 30)):
-        xVelocity *= -1
-        yVelocity *= -1
-        break;
-        case(ball.yPos == (slider.yPos - 30) && ball.xPos == (slider.xPos + 20)):
-        xVelocity *= -1
-        yVelocity *= -1
-        break;
-        case(ball.yPos == (slider.yPos - 30) && ball.xPos == (slider.xPos + 10)):
-        xVelocity *= -1
-        yVelocity *= -1
-        break;
-        case(ball.yPos == (slider.yPos - 30) && ball.xPos == slider.xPos):
-        xVelocity *= -1
-        yVelocity *= -1
-        break;
-        case(ball.yPos == (slider.yPos - 30) && ball.xPos == slider.xPos - 10):
-        xVelocity *= -1
-        yVelocity *= -1
-        break;
-        case(ball.yPos == (slider.yPos - 30) && ball.xPos == slider.xPos - 20):
-        xVelocity *= -1
-        yVelocity *= -1
-        break;
-    }
+    if(ball.yPos == (slider.yPos - 30) && (ball.xPos >= slider.xPos -20 && ball.xPos <= slider.xPos <= +100)){
+        bounce *= -1
+        if (bounce == 1){
+            xVelocity *= 1
+            yVelocity *= -1
+        }
+        if (bounce == -1){
+            xVelocity *= -1
+            yVelocity *= -1
+        }
+
 }
+
+
+    if ((ball.yPos == (block.yPos + 10)) && (ball.xPos == (block.xPos + 20))){
+            console.log("hol")
+            xVelocity *= -1
+            yVelocity *= -1
+        }
+    }
